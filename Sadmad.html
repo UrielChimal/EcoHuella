@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Huella Ecológica</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d9f7e6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #b0eacd;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    input[type="number"] {
+      width: calc(100% - 10px);
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    .info {
+      opacity: 0.5;
+      font-size: 12px;
+    }
+    #resultado {
+      margin-top: 20px;
+    }
+    .deficit {
+      color: red;
+    }
+    .superavit {
+      color: green;
+    }
+    .casi-deficit {
+      color: #ff8c00; /* Naranja */
+    }
+    .casi-superavit {
+      color: #32CD32; /* Verde lima */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Huella Ecológica</h1>
+    <form id="eco-form">
+      <div class="question">
+        <label for="consumo-carne">Kilogramos de carne consumidos al año:</label>
+        <input type="number" id="consumo-carne" name="consumo-carne" required>
+        <p class="info">(Promedio en México: 70 kg/año)</p>
+      </div>
+      <div class="question">
+        <label for="consumo-electricidad">Kilovatios-Hora de electricidad consumida al año:</label>
+        <input type="number" id="consumo-electricidad" name="consumo-electricidad" required>
+        <p class="info">(Promedio en México: 290 kWh/año)</p>
+      </div>
+      <div class="question">
+        <label for="consumo-agua">Litros de agua consumidos al día:</label>
+        <input type="number" id="consumo-agua" name="consumo-agua" required>
+        <p class="info">(Promedio en México: 300 L/día)</p>
+      </div>
+      <!-- Más preguntas -->
+      <div class="question">
+        <label for="kilometros-auto">Kilómetros conducidos en auto por semana:</label>
+        <input type="number" id="kilometros-auto" name="kilometros-auto" required>
+        <p class="info">(Promedio en México: 250 km/semana)</p>
+      </div>
+      <div class="question">
+        <label for="basura-generada">Kilogramos de basura generada por semana:</label>
+        <input type="number" id="basura-generada" name="basura-generada" required>
+        <p class="info">(Promedio en México: 1.2 kg/semana)</p>
+      </div>
+      <div class="question">
+        <label for="consumo-papel">Kilogramos de papel consumidos al año:</label>
+        <input type="number" id="consumo-papel" name="consumo-papel" required>
+        <p class="info">(Promedio en México: 50 kg/año)</p>
+      </div>
+      <div class="question">
+        <label for="consumo-transporte-publico">Gasto mensual en transporte público:</label>
+        <input type="number" id="consumo-transporte-publico" name="consumo-transporte-publico" required>
+        <p class="info">(Promedio en México: $500 MXN/mes)</p>
+      </div>
+
+      <input type="submit" value="Calcular">
+    </form>
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('eco-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const consumoCarne = parseFloat(document.getElementById('consumo-carne').value);
+      const consumoElectricidad = parseFloat(document.getElementById('consumo-electricidad').value);
+      const consumoAgua = parseFloat(document.getElementById('consumo-agua').value);
+      const kilometrosAuto = parseFloat(document.getElementById('kilometros-auto').value);
+      const basuraGenerada = parseFloat(document.getElementById('basura-generada').value);
+      const consumoPapel = parseFloat(document.getElementById('consumo-papel').value);
+      const consumoTransportePublico = parseFloat(document.getElementById('consumo-transporte-publico').value);
+      
+      // Cálculos
+      const huellaEco = (consumoCarne * 2) + (consumoElectricidad * 0.5) + (consumoAgua * 0.1) + (kilometrosAuto * 0.05) + (basuraGenerada * 0.1) + (consumoPapel * 0.2) + (consumoTransportePublico * 0.1);
+      const resultadoDiv = document.getElementById('resultado');
+      let mensaje = '';
+
+      if (huellaEco < 50) {
+        mensaje = `<h2>Tu Huella Ecológica es: ${huellaEco.toFixed(2)}</h2>
+                   <p class="superavit">¡Felicidades! Tienes un superávit ecológico.</p>`;
+      } else if (huellaEco > 100) {
+        mensaje = `<h2>Tu Huella Ecológica es: ${huellaEco.toFixed(2)}</h2>
+                   <p class="deficit">Tu huella ecológica es alta. ¡Es hora de reducirla!</p>`;
+      } else {
+        mensaje = `<h2>Tu Huella Ecológica es: ${huellaEco.toFixed(2)}</h2>
+                   <p class="casi-deficit">Estás a punto de tener un déficit ecológico.</p>`;
+      }
+
+      // Recomendaciones
+      let recomendaciones = '';
+      if (consumoCarne > consumoElectricidad && consumoCarne > consumoAgua && consumoCarne > kilometrosAuto && consumoCarne > basuraGenerada && consumoCarne > consumoPapel && consumoCarne > consumoTransportePublico) {
+        recomendaciones = '<p>¡Consumes mucha carne! Considera reducir tu ingesta optando por más alimentos vegetales.</p>';
+      } else if (consumoElectricidad > consumoCarne && consumoElectricidad > consumoAgua && consumoElectricidad > kilometrosAuto && consumoElectricidad > basuraGenerada && consumoElectricidad > consumoPapel && consumoElectricidad > consumoTransportePublico) {
+        recomendaciones = '<p>¡Tu consumo de electricidad es alto! Intenta reducirlo apagando dispositivos cuando no los uses y utilizando energía renovable si es posible.</p>';
+      } else if (consumoAgua > consumoCarne && consumoAgua > consumoElectricidad && consumoAgua > kilometrosAuto && consumoAgua > basuraGenerada && consumoAgua > consumoPapel && consumoAgua > consumoTransportePublico) {
+        recomendaciones = '<p>¡Consumes mucha agua! Trata de reducir tu consumo cerrando grifos cuando no los necesites y optando por electrodomésticos eficientes en agua.</p>';
+      } else if (kilometrosAuto > consumoCarne && kilometrosAuto > consumoElectricidad && kilometrosAuto > consumoAgua && kilometrosAuto > basuraGenerada && kilometrosAuto > consumoPapel && kilometrosAuto > consumoTransportePublico) {
+        recomendaciones = '<p>¡Tu uso del automóvil es alto! Considera usar transporte público, bicicleta o caminar más a menudo.</p>';
+      } else if (basuraGenerada > consumoCarne && basuraGenerada > consumoElectricidad && basuraGenerada > consumoAgua && basuraGenerada > kilometrosAuto && basuraGenerada > consumoPapel && basuraGenerada > consumoTransportePublico) {
+        recomendaciones = '<p>¡Generas mucha basura! Intenta reducir tus residuos reciclando y reutilizando más.</p>';
+      } else if (consumoPapel > consumoCarne && consumoPapel > consumoElectricidad && consumoPapel > consumoAgua && consumoPapel > kilometrosAuto && consumoPapel > basuraGenerada && consumoPapel > consumoTransportePublico) {
+        recomendaciones = '<p>¡Consumes mucho papel! Opta por la versión digital siempre que sea posible y recicla el papel que uses.</p>';
+      } else if (consumoTransportePublico > consumoCarne && consumoTransportePublico > consumoElectricidad && consumoTransportePublico > consumoAgua && consumoTransportePublico > kilometrosAuto && consumoTransportePublico > basuraGenerada && consumoTransportePublico > consumoPapel) {
+        recomendaciones = '<p>¡Tu gasto en transporte público es alto! Intenta combinar viajes y considera opciones de transporte más ecológicas como el transporte compartido o la bicicleta.</p>';
+      }
+
+      resultadoDiv.innerHTML = mensaje + `<p>${recomendaciones}</p><p>¡Tu huella ecológica está en la raya!</p>`;
+    });
+  </script>
+</body>
+</html>
+
+
